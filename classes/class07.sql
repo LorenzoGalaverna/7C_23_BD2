@@ -1,7 +1,7 @@
 #1
-SELECT title,rating, length
+SELECT title, rating, length
 FROM film
-WHERE length = ANY (SELECT min(length) FROM film);
+WHERE length = (SELECT min(length) FROM film);
 
 #2
 SELECT title, length
