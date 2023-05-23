@@ -17,7 +17,8 @@ order by CantidadCiudades DESC;
 
 #3
 SELECT c.first_name,c.last_name, a.address,(SELECT COUNT(*) FROM rental r WHERE c.customer_id = r.customer_id) as PelisRentadas,
-(SELECT SUM(p.amount) FROM payment p WHERE c.customer_id = p.customer_id) as DineroGastado FROM customer c
+(SELECT SUM(p.amount) FROM payment p WHERE c.customer_id = p.customer_id) as DineroGastado 
+FROM customer c
 JOIN address a on c.address_id = a.address_id
 GROUP BY c.first_name, c.last_name, a.address, c.customer_id
 ORDER BY DineroGastado DESC;
