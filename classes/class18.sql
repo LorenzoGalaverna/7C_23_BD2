@@ -94,11 +94,12 @@ END
                                                                             -------
 */
 -- Explation:
--- This function returns 0 or 1 depending on whether there is stock of a film, or not. 1 representing the availability of a film and 0 the opposite.
--- To do this, we pass the inventory_id to the function.
--- Internally, the code has 2 variables: v_rentals and v_out.
--- v_rentals is the result of a query that gets the count of rentals where inventory_id matches with the one passed in parameters. If is equal to 0 (there is no rentals), it will throw TRUE (inventory has stock).
--- v_out is the result of a query that also gets the count of rental_id from the table inventory, matching the inventory_id with the one passed in parameters, but with the filter that return_date is null (film not returned). If v_out is greater than 0, returns FALSE, otherwise, TRUE.
+--1 The function begins by declaring two local variables: v_rentals and v_out. These variables will be used to store counts of rental records.
+--2 It then performs the following SQL operations:
+#a. It counts the number of rental records associated with the provided inventory_id and stores the result in the v_rentals variable.
+#b. It checks if v_rentals is equal to 0. If there are no rental records for the inventory item, it means the item is available for rent, so it returns TRUE.
+#c. If there are rental records (v_rentals > 0), it counts the number of rental records where the return_date is NULL, which indicates items that are currently rented out but not yet returned. This count is stored in the v_out variable.
+#d. If v_out is greater than 0, it means there are items out on rental and not yet returned, so it returns FALSE. Otherwise, it returns TRUE.
 
 -- Examples of usage
 SELECT inventory_in_stock(3); -- This one throws 1 (TRUE, because MySQL detects boolean as 0 for FALSE and 1 for TRUE)
@@ -106,6 +107,7 @@ SELECT inventory_in_stock(3); -- This one throws 1 (TRUE, because MySQL detects 
 SELECT inventory_in_stock(1551); -- This one throws 0 (FALSE, because MySQL detects boolean as 0 for FALSE and 1 for TRUE)
 
 SHOW CREATE PROCEDURE film_in_stock;
+                                                                            ---CODE---
 /*
 CREATE PROCEDURE `film_in_stock`(IN p_film_id INT, IN p_store_id INT, OUT p_film_count INT)
 BEGIN
@@ -122,10 +124,15 @@ BEGIN
      INTO p_film_count;
 END
 */
+                                                                            -------
 -- Explanation:
--- It will show you the different inventory_id that has the film_id and store_id that you send in the parameters. It also can return the total of inventories that have that film in that store.
--- Internally, it has 2 "queries". 
--- The first one, is for showing the different inventory_id, matching the film_id and store_id with its respective filters in the WHERE clause.
--- The second one, is for return the total of inventories, considering the parameters you sent. 
+--1 The procedure begins by declaring its input parameters (p_film_id and p_store_id) and an output parameter (p_film_count), which will be used to store the count of film copies in stock.
+--2 In the body of the procedure, two SQL queries are executed:
+#a. The first query selects inventory_id from the inventory table where the following conditions are met:
+-- film_id is equal to p_film_id.
+-- store_id is equal to p_store_id.
+-- The inventory_in_stock function returns TRUE for that inventory_id.
+#b. The second query counts the number of records that meet the same conditions as the first query. The result of this count is stored in the output parameter p_film_count.
+
 CALL film_in_stock(3,2,@a);
 SELECT @a;
