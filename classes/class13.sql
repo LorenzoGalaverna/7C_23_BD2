@@ -12,8 +12,6 @@ FROM address a
     INNER JOIN country co USING(country_id)
 WHERE (
         co.country = "United States"
-        AND co.country_id = ci.country_id
-        AND ci.city_id = a.city_id
     );
 SELECT * FROM customer WHERE last_name = "Galaverna";
 
@@ -70,23 +68,17 @@ DELETE FROM film WHERE film_id='4';
 -- La solucion para esto es borrar primero(en order de hijo a padre) las row a las que la pelicula esta relacionada.
 -- Tambien se puede desactivar FOREIGN KEY CHECK y luego volver a activarlo, pero esto no es recomendable
 ;
-DELETE FROM payment
-WHERE rental_id IN (
-        SELECT rental_id
-        FROM rental
-            INNER JOIN inventory USING(inventory_id)
-        WHERE film_id = 4
-    );
+
 DELETE FROM rental
 WHERE inventory_id IN (
         SELECT inventory_id
         FROM inventory
-        WHERE film_id = 4
+        WHERE film_id = 3
     );
-DELETE FROM inventory WHERE film_id = 4;
-DELETE FROM film_actor WHERE film_id = 4;
-DELETE FROM film_category WHERE film_id = 4;
-DELETE FROM film WHERE film_id = 4;
+DELETE FROM inventory WHERE film_id = 3;
+DELETE FROM film_actor WHERE film_id = 3;
+DELETE FROM film_category WHERE film_id = 3;
+DELETE FROM film WHERE film_id = 3;
 
 #Rent a film
 #Find an inventory id that is available for rent (available in store) pick any movie. Save this id somewhere.
@@ -103,4 +95,4 @@ VALUES (CURRENT_DATE(), (SELECT I.inventory_id
                                             AND R.return_date = null)
                          LIMIT 1), 1, CURRENT_DATE(), 1);
 INSERT INTO payment (customer_id, staff_id, rental_id, amount, payment_date)
-VALUES (1, 1, (SELECT LAST_INSERT_ID()), 9.7, CURRENT_DATE)
+VALUES (1, 1, (SELECT LAST_INSERT_ID()), 9.7, CURRENT_DATE())

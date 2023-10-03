@@ -29,12 +29,12 @@ FROM film f
 #by hand from a web page. Make sure to "adjust" the input text to try to find the films as effectively as you think is possible.
 ;
 SELECT
-    ac.actor_id,CONCAT(ac.first_name,' ',ac.last_name)as 'Nombre Actor/Actriz', f.film_id, f.title, f.release_year
+    ac.actor_id,CONCAT(ac.first_name,' ',ac.last_name) as 'Nombre Actor/Actriz', f.film_id, f.title, f.release_year
 FROM film f
     INNER JOIN film_actor USING(film_id)
     INNER JOIN actor ac USING(actor_id)
 WHERE
-    CONCAT(first_name, ' ', last_name) LIKE TRIM(UPPER('NICK WAHLBERG'));
+    CONCAT(ac.first_name, ' ', ac.last_name) LIKE TRIM(UPPER('NICK WAHLBERG'));
 
 #Find all the rentals done in the months of May and June. Show the film title, customer name and if it was returned or not. There should be returned 
 #column with two possible values 'Yes' and 'No'.
@@ -42,14 +42,15 @@ WHERE
 SELECT
     f.title, r.rental_date, c.first_name,
     CASE
-        WHEN r.return_date IS NULL THEN 'No' ELSE 'Yes'
+        WHEN r.return_date IS NULL THEN 'No' 
+        ELSE 'Yes'
     END 'Returned?'
 FROM rental r
     INNER JOIN inventory i USING(inventory_id)
     INNER JOIN film f USING(film_id)
     INNER JOIN customer c USING(customer_id)
 WHERE
-    MONTH(r.rental_date) = '05'OR MONTH(r.rental_date) = '06'
+    MONTH(r.rental_date) = '05' OR MONTH(r.rental_date) = '06'
 
 #Investigate CAST and CONVERT functions. Explain the differences if any, write examples based on sakila DB.
 ;

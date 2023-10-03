@@ -63,14 +63,12 @@ ALTER TABLE employees ADD lastUpdate datetime;
 ALTER TABLE employees ADD lastUpdateUser varchar(50);
 
 DELIMITER $$
-CREATE TRIGGER before_employees_update BEFORE UPDATE ON employees
-    FOR EACH ROW 
+CREATE TRIGGER before_employees_update BEFORE UPDATE ON employees FOR EACH ROW 
 BEGIN
     SET NEW.lastUpdate = now();
     SET NEW.lastUpdateUser = CURRENT_USER;
 END$$
-CREATE TRIGGER before_employees_insert BEFORE insert ON employees
-    FOR EACH ROW 
+CREATE TRIGGER before_employees_insert BEFORE insert ON employees FOR EACH ROW 
 BEGIN
     SET NEW.lastUpdate = now();
     SET NEW.lastUpdateUser = CURRENT_USER;

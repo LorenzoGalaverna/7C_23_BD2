@@ -1,4 +1,4 @@
-#CLASS19;
+#CLASS18;
 #1 - Write a function that returns the amount of copies of a film in a store in sakila-db. Pass either the film id or the film name and the store id.
 DELIMITER //
 
@@ -29,9 +29,9 @@ BEGIN
 	DECLARE f_name VARCHAR(250); 
 	DECLARE l_name VARCHAR(250);
 	DECLARE country VARCHAR(250);
-
-	DECLARE cursorList CURSOR FOR
-	SELECT
+    DECLARE cursorList CURSOR FOR
+	
+    SELECT
 	    co.country,c.first_name,c.last_name
 	FROM customer c
 	    INNER JOIN address USING(address_id)
@@ -134,5 +134,5 @@ END
 -- The inventory_in_stock function returns TRUE for that inventory_id.
 #b. The second query counts the number of records that meet the same conditions as the first query. The result of this count is stored in the output parameter p_film_count.
 
-CALL film_in_stock(3,2,@a);
+CALL film_in_stock(2,2,@a);
 SELECT @a;
